@@ -1,9 +1,11 @@
 import time
+from datetime import datetime
 
 import config
 import func
 
 print(config.art)
+print(datetime.now())
 timings = func.get_the_time_anyway(config.url)
 print(f'sunset time: {timings[0]}')
 print(f'sunrise time: {timings[1]}')
