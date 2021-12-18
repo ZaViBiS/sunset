@@ -3,7 +3,7 @@ import json
 import time
 import urllib.request
 
-from config import blynk_url, url
+from config import blynk_url, time_url, url
 
 
 def get_the_time_anyway(url: str) -> list:
@@ -36,8 +36,8 @@ def get_time(url: str) -> list:
 
 
 def check_n_do_sunset(timings: list):
-    evning_off_time = datetime_from_stings('22:30:00')
-    now = datetime.datetime.now()
+    evning_off_time = datetime_from_stings('20:30:00')
+    now = get_time_now()
     print(evning_off_time)
     if timings[0] < now and evning_off_time > now:
         print('sunset garland on')
@@ -51,8 +51,8 @@ def check_n_do_sunset(timings: list):
 
 
 def check_n_do_sunrise(timings: list):
-    morining_off_time = datetime_from_stings('9:00:00')
-    now = datetime.datetime.now()
+    morining_off_time = datetime_from_stings('7:00:00')
+    now = get_time_now()
     if timings[1] < now and morining_off_time > now:
         garland(True)
         time.sleep((morining_off_time - now).total_seconds())
@@ -85,3 +85,13 @@ def datetime_from_stings(data: str) -> datetime.datetime:
     # Потому что получаемые данные идут с учетом часового пояса, а мне это не надо
     today = datetime.date.today()
     return datetime_parse_ISO8601(f'{today.strftime("%Y-%m-%d")}T{data}'+7*'7')
+
+
+def get_time_now() -> datetime:
+    data = json.loads(get(time_url).read())
+    data = data['currentDateTime'][:-1]
+    return datetime.datetime.strptime(data, "%Y-%m-%dT%H:%M") + datetime.timedelta(hours=2)
+
+
+if __name__ == '__main__':
+    pass
